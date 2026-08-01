@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: resume-backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/resume_builder
+    username: postgres
+    password: postgres123
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8080
