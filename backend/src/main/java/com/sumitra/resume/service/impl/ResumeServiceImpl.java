@@ -5,6 +5,8 @@ import com.sumitra.resume.entity.User;
 import com.sumitra.resume.repository.ResumeRepository;
 import com.sumitra.resume.repository.UserRepository;
 import com.sumitra.resume.service.ResumeService;
+import com.sumitra.resume.util.PdfExtractor;
+import com.sumitra.resume.util.TextChunker;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -20,6 +23,8 @@ public class ResumeServiceImpl implements ResumeService {
 
     private final ResumeRepository resumeRepository;
     private final UserRepository userRepository;
+    private final PdfExtractor pdfExtractor;
+    private final TextChunker textChunker;
 
     @Override
     public String uploadResume(MultipartFile file, String email) {
@@ -49,10 +54,20 @@ public class ResumeServiceImpl implements ResumeService {
 
             file.transferTo(destination);
 
+            String resumeText = pdfExtractor.extractText(destination);
+
+            List<String> chunks = textChunker.chunkText(resumeText);
+            System.out.println("Total Chunks : " + chunks.size());
+            for (int i = 0; i < chunks.size(); i++) {
+                System.out.println("========== Chunk " + (i + 1) + " ==========");
+                System.out.println(chunks.get(i));
+            }
+
             Resume resume = new Resume();
 
             resume.setFileName(file.getOriginalFilename());
             resume.setFilePath(destination.getAbsolutePath());
+            resume.setResumeText(resumeText);
             resume.setUploadedAt(LocalDateTime.now());
             resume.setUser(user);
 

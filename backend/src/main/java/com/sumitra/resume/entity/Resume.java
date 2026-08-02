@@ -16,6 +16,10 @@ public class Resume {
 
     private String filePath;
 
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String resumeText;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -25,10 +29,11 @@ public class Resume {
     public Resume() {
     }
 
-    public Resume(Long id, String fileName, String filePath, User user, LocalDateTime uploadedAt) {
+    public Resume(Long id, String fileName, String filePath, String resumeText, User user, LocalDateTime uploadedAt) {
         this.id = id;
         this.fileName = fileName;
         this.filePath = filePath;
+        this.resumeText = resumeText;
         this.user = user;
         this.uploadedAt = uploadedAt;
     }
@@ -43,6 +48,10 @@ public class Resume {
 
     public String getFilePath() {
         return filePath;
+    }
+
+    public String getResumeText() {
+        return resumeText;
     }
 
     public User getUser() {
@@ -63,6 +72,10 @@ public class Resume {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public void setResumeText(String resumeText) {
+        this.resumeText = resumeText;
     }
 
     public void setUser(User user) {

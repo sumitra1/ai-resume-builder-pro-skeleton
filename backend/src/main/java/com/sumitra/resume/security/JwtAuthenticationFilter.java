@@ -27,26 +27,41 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        final String authorizationHeader = request.getHeader("Authorization");
-        final String token;
-        final String email;
+        System.out.println("JWT Filter Executed");
+        String authHeader = request.getHeader("Authorization");
+        System.out.println("Authorization Header: " + authHeader);
 
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.out.println("Authorization header missing or not a Bearer token.");
             filterChain.doFilter(request, response);
             return;
         }
 
-        token = authorizationHeader.substring(7);
-        email = jwtService.extractEmail(token);
+        final String token = authHeader.substring(7);
+        System.out.println("Token extracted: " + token);
+
+        final String email;
+        try {
+            email = jwtService.extractEmail(token);
+            System.out.println("Email from token: " + email);
+        } catch (Exception e) {
+            System.out.println("JWT parse failed: " + e.getMessage());
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+            System.out.println("Loaded user: " + userDetails.getUsername());
 
             if (jwtService.isTokenValid(token, userDetails.getUsername())) {
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                System.out.println("Authentication Set");
+            } else {
+                System.out.println("JWT is invalid for user: " + userDetails.getUsername());
             }
         }
 
