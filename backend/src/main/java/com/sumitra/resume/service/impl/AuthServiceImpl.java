@@ -8,6 +8,7 @@ import com.sumitra.resume.exception.EmailAlreadyExistsException;
 import com.sumitra.resume.exception.InvalidCredentialsException;
 import com.sumitra.resume.exception.UserNotFoundException;
 import com.sumitra.resume.repository.UserRepository;
+import com.sumitra.resume.security.JwtService;
 import com.sumitra.resume.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +22,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     @Override
     public AuthResponse register(RegisterRequest request) {
@@ -29,17 +31,16 @@ public class AuthServiceImpl implements AuthService {
             throw new EmailAlreadyExistsException("Email already exists");
         }
 
-    User user = User.builder()
-            .name(request.getName())
-            .email(request.getEmail())
-            .password(passwordEncoder.encode(request.getPassword()))
-            .createdAt(LocalDateTime.now())
-            .build();
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setCreatedAt(LocalDateTime.now());
 
-    userRepository.save(user);
+        userRepository.save(user);
 
-    return new AuthResponse("User registered successfully");
-}
+        return new AuthResponse("User registered successfully");
+    }
 
     @Override
     public AuthResponse login(LoginRequest request) {
@@ -55,6 +56,6 @@ public class AuthServiceImpl implements AuthService {
             throw new InvalidCredentialsException("Invalid email or password");
         }
 
-        return new AuthResponse("Login Successful");
+        return new AuthResponse(jwtService.generateToken(user.getEmail()));
     }
 }
