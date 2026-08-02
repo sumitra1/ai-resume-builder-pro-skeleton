@@ -1,5 +1,7 @@
 package com.sumitra.resume.controller;
 
+import com.sumitra.resume.dto.AuthResponse;
+import com.sumitra.resume.dto.LoginRequest;
 import com.sumitra.resume.dto.RegisterRequest;
 import com.sumitra.resume.service.AuthService;
 import jakarta.validation.Valid;
@@ -14,9 +16,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public String register(@Valid @RequestBody RegisterRequest request) {
-
+    public AuthResponse register(@Valid @RequestBody RegisterRequest request) {
         return authService.register(request);
+    }
 
+    @PostMapping("/login")
+    public AuthResponse login(@Valid @RequestBody LoginRequest request) {
+        return authService.login(request);
     }
 }

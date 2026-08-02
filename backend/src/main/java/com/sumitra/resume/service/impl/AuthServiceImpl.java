@@ -1,10 +1,16 @@
 package com.sumitra.resume.service.impl;
 
+import com.sumitra.resume.dto.AuthResponse;
+import com.sumitra.resume.dto.LoginRequest;
 import com.sumitra.resume.dto.RegisterRequest;
 import com.sumitra.resume.entity.User;
+import com.sumitra.resume.exception.EmailAlreadyExistsException;
+import com.sumitra.resume.exception.InvalidCredentialsException;
+import com.sumitra.resume.exception.UserNotFoundException;
 import com.sumitra.resume.repository.UserRepository;
 import com.sumitra.resume.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,30 +20,41 @@ import java.time.LocalDateTime;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-  @Override
-public String register(RegisterRequest request) {
+    @Override
+    public AuthResponse register(RegisterRequest request) {
 
-    System.out.println("========== REGISTER API ==========");
-    System.out.println("Request: " + request);
-
-    if (userRepository.existsByEmail(request.getEmail())) {
-        throw new RuntimeException("Email already exists");
-    }
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new EmailAlreadyExistsException("Email already exists");
+        }
 
     User user = User.builder()
             .name(request.getName())
             .email(request.getEmail())
-            .password(request.getPassword())
+            .password(passwordEncoder.encode(request.getPassword()))
             .createdAt(LocalDateTime.now())
             .build();
 
-    System.out.println("User Object: " + user);
-
     userRepository.save(user);
 
-    System.out.println("User saved successfully!");
-
-    return "User registered successfully";
+    return new AuthResponse("User registered successfully");
 }
+
+    @Override
+    public AuthResponse login(LoginRequest request) {
+
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() ->
+                        new UserNotFoundException("User not found"));
+
+        if (!passwordEncoder.matches(
+                request.getPassword(),
+                user.getPassword())) {
+
+            throw new InvalidCredentialsException("Invalid email or password");
+        }
+
+        return new AuthResponse("Login Successful");
+    }
 }
