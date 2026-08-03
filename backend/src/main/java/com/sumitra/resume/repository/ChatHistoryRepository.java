@@ -8,4 +8,6 @@ import java.util.List;
 public interface ChatHistoryRepository extends JpaRepository<ChatHistory, Long> {
 
     List<ChatHistory> findByUserEmailAndResumeId(String email, String resumeId);
+
+    List<ChatHistory> findByUserEmail(String email);
 }
