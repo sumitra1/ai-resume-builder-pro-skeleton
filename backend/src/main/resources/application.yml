@@ -17,3 +17,12 @@ spring:
 
 server:
   port: 8080
+
+gemini:
+  api:
+    key: ${GEMINI_API_KEY}
+
+chroma:
+  endpoint: ${CHROMA_ENDPOINT:http://localhost:8000}
+  collection:
+    id: df2459e4-7b93-4ebb-867a-5bcf6b4f9438
