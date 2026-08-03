@@ -13,4 +13,8 @@ public class GeminiService {
     public String ask(String prompt) {
         return chatModel.chat(prompt);
     }
+
+    public String generate(String prompt) {
+        return chatModel.chat(prompt);
+    }
 }
