@@ -72,7 +72,7 @@ public class ResumeServiceImpl implements ResumeService {
                 chromaVectorStoreService.upsertResumeChunk(chunk);
             }
 
-            return "Resume uploaded successfully";
+            return resumeId;
 
         } catch (Exception e) {
             e.printStackTrace();

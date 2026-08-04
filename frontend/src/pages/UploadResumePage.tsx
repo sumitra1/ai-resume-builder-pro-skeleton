@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 
 
@@ -7,6 +8,8 @@ const UploadResumePage = () => {
   const [file, setFile] = useState<File | null>(null);
 
   const [message, setMessage] = useState<string>("");
+
+  const navigate = useNavigate();
 
 
   const handleUpload = async () => {
@@ -40,9 +43,21 @@ const UploadResumePage = () => {
 
       console.log(response.data);
 
-      setMessage(
-        "Resume uploaded successfully"
+
+      // Save resume id for AI chat
+      localStorage.setItem(
+        "resumeId",
+        response.data.resumeId
       );
+
+
+      setMessage(
+        response.data.message
+      );
+
+
+      // Go to chat page
+      navigate("/chat");
 
 
     } catch (error) {
