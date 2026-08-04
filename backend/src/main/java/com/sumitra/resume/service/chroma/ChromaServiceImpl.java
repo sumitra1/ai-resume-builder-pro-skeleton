@@ -35,12 +35,9 @@ public class ChromaServiceImpl implements ChromaService {
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
 
-        System.out.println("Calling: " + url);
-
         try {
             var response = restTemplate.postForEntity(url, request, String.class);
-            System.out.println(response.getStatusCode());
-            System.out.println(response.getBody());
+           
         } catch (Exception e) {
             e.printStackTrace();
         }

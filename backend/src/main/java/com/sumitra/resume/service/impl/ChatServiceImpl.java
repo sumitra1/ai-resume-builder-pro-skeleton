@@ -36,9 +36,6 @@ public class ChatServiceImpl implements ChatService {
                 .reduce((a, b) -> a + "\n\n" + b)
                 .orElse("");
 
-        System.out.println("===== Retrieved Context =====");
-        System.out.println(context);
-        System.out.println("=============================");
 
         String prompt = buildPrompt(context, question);
         String answer = geminiService.generate(prompt);

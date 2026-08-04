@@ -48,9 +48,7 @@ public class ResumeServiceImpl implements ResumeService {
             String fileName = UUID.randomUUID() + "." + extension;
             File destination = new File(dir, fileName);
 
-            System.out.println("Upload Directory : " + dir.getAbsolutePath());
-            System.out.println("Destination File : " + destination.getAbsolutePath());
-            System.out.println("Directory Exists : " + dir.exists());
+    
 
             file.transferTo(destination);
             String resumeText = pdfExtractor.extractText(destination);
@@ -66,10 +64,8 @@ public class ResumeServiceImpl implements ResumeService {
             String resumeId = savedResume.getId().toString();
 
             List<String> chunks = textChunker.chunkText(resumeText);
-            System.out.println("Total Chunks : " + chunks.size());
+
             for (int i = 0; i < chunks.size(); i++) {
-                System.out.println("========== Chunk " + (i + 1) + " ==========");
-                System.out.println(chunks.get(i));
 
                 ResumeChunk chunk = resumeEmbeddingService.createChunk(chunks.get(i));
                 chunk.setResumeId(resumeId);

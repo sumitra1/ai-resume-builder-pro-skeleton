@@ -53,8 +53,7 @@ public class ChromaVectorStoreService {
 
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-            System.out.println("Chroma response: " + response.getStatusCode());
-            System.out.println("Chroma body: " + response.getBody());
+          
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
