@@ -8,13 +8,11 @@ import ChatPage from "../pages/ChatPage";
 import HistoryPage from "../pages/HistoryPage";
 import JobMatchPage from "../pages/JobMatchPage";
 import NotFoundPage from "../pages/NotFoundPage";
-
 import PrivateRoute from "./PrivateRoute";
 
 const AppRoutes = () => {
   return (
     <Routes>
-
       <Route path="/" element={<Navigate to="/login" replace />} />
 
       {/* Public Routes */}
