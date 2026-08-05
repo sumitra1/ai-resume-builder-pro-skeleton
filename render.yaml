@@ -39,4 +39,6 @@ services:
           name: resume-ai-chroma
           envVarKey: RENDER_EXTERNAL_URL
       - key: FRONTEND_URL
-        sync: false
+        value: https://localhost
+      - key: JAVA_OPTS
+        value: -Xmx450m -XX:+UseSerialGC

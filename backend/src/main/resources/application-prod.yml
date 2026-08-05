@@ -22,10 +22,8 @@ gemini:
 
 chroma:
   endpoint: ${CHROMA_ENDPOINT}
-
-app:
-  cors:
-    allowed-origins: ${FRONTEND_URL}
+  collection:
+    name: resume_chunks
 
 jwt:
   secret: ${JWT_SECRET}

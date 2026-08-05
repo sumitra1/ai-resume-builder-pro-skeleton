@@ -25,7 +25,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Value("${app.cors.allowed-origins:http://localhost:5173}")
+    @Value("${FRONTEND_URL:http://localhost:5173}")
     private String allowedOrigins;
 
     @Bean
@@ -51,7 +51,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        List<String> origins = Arrays.stream(allowedOrigins.split(","))
+        String originsSource = allowedOrigins == null || allowedOrigins.isBlank()
+                ? "http://localhost:5173"
+                : allowedOrigins;
+        List<String> origins = Arrays.stream(originsSource.split(","))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .toList();
