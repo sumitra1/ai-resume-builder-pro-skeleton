@@ -1,0 +1,42 @@
+# See https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: resume-ai-chroma
+    runtime: docker
+    plan: free
+    dockerfilePath: docker/chroma.Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/v2/heartbeat
+    envVars:
+      - key: IS_PERSISTENT
+        value: "TRUE"
+      - key: ANONYMIZED_TELEMETRY
+        value: "FALSE"
+
+  - type: web
+    name: resume-ai-api
+    runtime: docker
+    plan: free
+    dockerfilePath: backend/Dockerfile
+    dockerContext: backend
+    healthCheckPath: /api/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_USERNAME
+        sync: false
+      - key: DATABASE_PASSWORD
+        sync: false
+      - key: CHROMA_ENDPOINT
+        fromService:
+          type: web
+          name: resume-ai-chroma
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: FRONTEND_URL
+        sync: false
