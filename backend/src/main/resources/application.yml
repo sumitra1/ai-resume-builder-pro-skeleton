@@ -1,6 +1,6 @@
 spring:
   application:
-    name: resume-backend
+    name: resume-ai-analyzer
 
   datasource:
     url: jdbc:postgresql://localhost:5432/resume_builder
@@ -20,9 +20,16 @@ server:
 
 gemini:
   api:
-    key: ${GEMINI_API_KEY}
+    key: ${GEMINI_API_KEY:}
 
 chroma:
   endpoint: ${CHROMA_ENDPOINT:http://localhost:8000}
   collection:
-    id: df2459e4-7b93-4ebb-867a-5bcf6b4f9438
+    name: resume_chunks
+
+app:
+  cors:
+    allowed-origins: http://localhost:5173
+
+jwt:
+  secret: ${JWT_SECRET:mySuperSecretKeyForJwtAuthenticationProject123456789}
