@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
 
-        return new AuthResponse("User registered successfully");
+        return new AuthResponse(jwtService.generateToken(user.getEmail()));
     }
 
     @Override

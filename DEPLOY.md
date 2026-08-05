@@ -168,7 +168,8 @@ docker compose up -d chromadb
 
 | Issue | Fix |
 |-------|-----|
-| CORS error | Set `FRONTEND_URL` on Render to exact Vercel URL |
+| **Registration / login fails** with generic error | 1) On Render API: set `FRONTEND_URL` to your exact Vercel URL (no trailing slash) and **Manual Deploy**. 2) On Vercel: set `VITE_API_URL=https://resume-ai-api-d63g.onrender.com/api` and **Redeploy** (env vars are baked in at build time). |
+| CORS error in browser console | Set `FRONTEND_URL` on Render to exact Vercel URL; redeploy API. Backend also allows `https://*.vercel.app` after latest deploy. |
 | Chroma 404 collection | Collection auto-creates on upload; re-upload resume |
 | 502 / slow first request | Render free tier cold start — wait and retry |
 | Gemini errors | Check `GEMINI_API_KEY` on Render |

@@ -30,10 +30,16 @@ const RegisterPage = () => {
       navigate("/dashboard");
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
-        setError(
-          (err.response?.data as { message?: string })?.message ||
-            "Registration failed."
-        );
+        if (!err.response) {
+          setError(
+            "Cannot reach the API. Check that VITE_API_URL is set on Vercel and redeploy."
+          );
+        } else {
+          setError(
+            (err.response?.data as { message?: string })?.message ||
+              "Registration failed."
+          );
+        }
       } else {
         setError("Registration failed. Please try again.");
       }

@@ -19,7 +19,7 @@ services:
     plan: free
     dockerfilePath: backend/Dockerfile
     dockerContext: backend
-    healthCheckPath: /api/health
+    healthCheckPath: /actuator/health
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -39,6 +39,6 @@ services:
           name: resume-ai-chroma
           envVarKey: RENDER_EXTERNAL_URL
       - key: FRONTEND_URL
-        value: https://localhost
+        value: https://ai-resume-analyser-ruddy-pi.vercel.app
       - key: JAVA_OPTS
         value: -Xmx450m -XX:+UseSerialGC
