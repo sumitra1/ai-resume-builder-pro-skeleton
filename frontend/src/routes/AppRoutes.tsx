@@ -58,7 +58,14 @@ const AppRoutes = () => {
         }
       />
 
-      <Route path="/analysis" element={<AnalysisPage />} />
+      <Route
+        path="/analysis"
+        element={
+          <PrivateRoute>
+            <AnalysisPage />
+          </PrivateRoute>
+        }
+      />
 
       <Route
         path="/job-match"

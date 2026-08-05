@@ -1,11 +1,11 @@
 package com.sumitra.resume.service.vectorstore;
 
 import com.sumitra.resume.model.ResumeChunk;
+import com.sumitra.resume.service.chroma.ChromaCollectionService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,20 +19,24 @@ public class ChromaVectorStoreService {
 
     private final RestTemplate restTemplate;
     private final String chromaEndpoint;
-    private final String collectionId;
+    private final ChromaCollectionService chromaCollectionService;
 
-    public ChromaVectorStoreService(RestTemplate restTemplate,
-                                    @Value("${chroma.endpoint}") String chromaEndpoint,
-                                    @Value("${chroma.collection.id}") String collectionId) {
+    public ChromaVectorStoreService(
+            RestTemplate restTemplate,
+            @Value("${chroma.endpoint}") String chromaEndpoint,
+            ChromaCollectionService chromaCollectionService
+    ) {
         this.restTemplate = restTemplate;
         this.chromaEndpoint = chromaEndpoint;
-        this.collectionId = collectionId;
+        this.chromaCollectionService = chromaCollectionService;
     }
 
     public void upsertResumeChunk(ResumeChunk chunk) {
+        chromaCollectionService.ensureCollectionExists();
+
         String url = chromaEndpoint
                 + "/api/v2/tenants/default_tenant/databases/default_database/collections/"
-                + collectionId
+                + chromaCollectionService.getCollectionId()
                 + "/add";
 
         HttpHeaders headers = new HttpHeaders();
@@ -50,14 +54,6 @@ public class ChromaVectorStoreService {
         body.put("metadatas", List.of(metadata));
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
-
-        try {
-            ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-          
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+        restTemplate.postForEntity(url, request, String.class);
     }
 }
-

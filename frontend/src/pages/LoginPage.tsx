@@ -1,63 +1,102 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Paper,
+  Alert,
+  Link,
+} from "@mui/material";
 import { login } from "../services/authService";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
-
+import { APP_NAME } from "../constants/app";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const { login: saveToken } = useAuth();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
- const handleLogin = async () => {
-  try {
-    const res = await login(email, password);
-
-    console.log("Login Success:", res);
-
-    saveToken(res.token);
-
-    navigate("/dashboard");
-  } catch (err: unknown) {
-    if (axios.isAxiosError(err)) {
-      console.log("Status:", err.response?.status);
-      console.log("Data:", err.response?.data);
-      console.log("Full Error:", err);
-
-      alert(JSON.stringify(err.response?.data));
-    } else {
-      console.error("Unknown error:", err);
+  const handleLogin = async () => {
+    setError("");
+    try {
+      const res = await login(email, password);
+      saveToken(res.token);
+      navigate("/dashboard");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(
+          (err.response?.data as { message?: string })?.message ||
+            "Login failed. Check your credentials."
+        );
+      } else {
+        setError("Login failed. Please try again.");
+      }
     }
-  }
-};
+  };
+
   return (
-    <div style={{ padding: 40 }}>
-      <h2>Login</h2>
+    <Box
+      sx={{
+        maxWidth: 420,
+        mx: "auto",
+        mt: 6,
+      }}
+    >
+      <Paper sx={{ p: 4 }}>
+        <Typography
+          variant="h5"
+          gutterBottom
+          sx={{ fontWeight: 700, color: "primary.main" }}
+        >
+          {APP_NAME}
+        </Typography>
+        <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+          Welcome back
+        </Typography>
+        <Typography color="text.secondary" sx={{ mb: 3 }}>
+          Sign in to continue
+        </Typography>
 
-      <input
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
 
-      <br />
-      <br />
+        <TextField
+          fullWidth
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          fullWidth
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          sx={{ mb: 3 }}
+        />
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        <Button fullWidth variant="contained" size="large" onClick={handleLogin}>
+          Login
+        </Button>
 
-      <br />
-      <br />
-
-      <button onClick={handleLogin}>Login</button>
-    </div>
+        <Typography variant="body2" sx={{ mt: 2, textAlign: "center" }}>
+          No account?{" "}
+          <Link component={RouterLink} to="/register">
+            Register
+          </Link>
+        </Typography>
+      </Paper>
+    </Box>
   );
 };
 

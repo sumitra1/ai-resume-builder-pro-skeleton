@@ -3,6 +3,7 @@ package com.sumitra.resume.service.vectorstore;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sumitra.resume.dto.SourceChunk;
+import com.sumitra.resume.service.chroma.ChromaCollectionService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,18 +21,19 @@ public class ChromaSearchService {
 
     private final RestTemplate restTemplate;
     private final String chromaEndpoint;
-    private final String collectionId;
+    private final ChromaCollectionService chromaCollectionService;
     private final ObjectMapper objectMapper;
 
     public ChromaSearchService(
             RestTemplate restTemplate,
             @Value("${chroma.endpoint}") String chromaEndpoint,
-            @Value("${chroma.collection.id}") String collectionId
+            ChromaCollectionService chromaCollectionService,
+            ObjectMapper objectMapper
     ) {
         this.restTemplate = restTemplate;
         this.chromaEndpoint = chromaEndpoint;
-        this.collectionId = collectionId;
-        this.objectMapper = new ObjectMapper();
+        this.chromaCollectionService = chromaCollectionService;
+        this.objectMapper = objectMapper;
     }
 
     public String search(List<Float> embedding) {
@@ -49,6 +51,7 @@ public class ChromaSearchService {
     }
 
     public List<SourceChunk> searchChunks(List<Float> embedding, String resumeId, int nResults) {
+        chromaCollectionService.ensureCollectionExists();
         String url = queryUrl();
 
         HttpHeaders headers = new HttpHeaders();
@@ -75,7 +78,7 @@ public class ChromaSearchService {
     private String queryUrl() {
         return chromaEndpoint
                 + "/api/v2/tenants/default_tenant/databases/default_database/collections/"
-                + collectionId
+                + chromaCollectionService.getCollectionId()
                 + "/query";
     }
 
