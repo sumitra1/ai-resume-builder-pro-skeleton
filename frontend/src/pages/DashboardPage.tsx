@@ -7,24 +7,36 @@ const DashboardPage = () => {
   return (
     <div className="dashboard-container">
 
+
       <div className="dashboard-header">
-        <h1>Resume AI Copilot</h1>
+
+        <h1>
+          Resume AI Copilot
+        </h1>
+
         <p>
           Upload your resume and get AI-powered insights.
         </p>
+
       </div>
+
+
 
 
       <div className="dashboard-actions">
 
 
+
         <div className="card">
 
-          <h2>Upload Resume</h2>
+          <h2>
+            Upload Resume
+          </h2>
 
           <p>
-            Upload your existing resume PDF and let AI analyze it.
+            Upload your resume PDF and generate AI insights.
           </p>
+
 
           <button
             onClick={() => navigate("/upload")}
@@ -36,13 +48,19 @@ const DashboardPage = () => {
 
 
 
+
+
         <div className="card">
 
-          <h2>Chat With Resume</h2>
+          <h2>
+            Chat With Resume
+          </h2>
+
 
           <p>
-            Ask AI questions about your uploaded resume.
+            Ask AI questions based on your resume.
           </p>
+
 
           <button
             onClick={() => navigate("/chat")}
@@ -54,42 +72,58 @@ const DashboardPage = () => {
 
 
 
+
+
         <div className="card">
 
-          <h2>Job Match</h2>
+          <h2>
+            ATS Analysis
+          </h2>
+
 
           <p>
-            Compare your resume with a job description.
+            Get resume score, strengths, weaknesses and suggestions.
           </p>
 
+
           <button
-            onClick={() => navigate("/job-match")}
+            onClick={() => navigate("/analysis")}
           >
-            Match Job
+            Analyze Resume
           </button>
+
 
         </div>
 
 
 
+
+
         <div className="card">
 
-          <h2>History</h2>
+          <h2>
+            Improve Resume
+          </h2>
+
 
           <p>
-            View previous AI analysis and chats.
+            Improve your experience sections using AI.
           </p>
 
+
           <button
-            onClick={() => navigate("/history")}
+            onClick={() => navigate("/improve")}
           >
-            View History
+            Improve Resume
           </button>
 
+
         </div>
+
 
 
       </div>
+
 
     </div>
   );

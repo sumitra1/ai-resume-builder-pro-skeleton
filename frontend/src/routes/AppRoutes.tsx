@@ -9,6 +9,8 @@ import HistoryPage from "../pages/HistoryPage";
 import JobMatchPage from "../pages/JobMatchPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import PrivateRoute from "./PrivateRoute";
+import AnalysisPage from "../pages/AnalysisPage";
+import ImproveResumePage from "../pages/ImproveResumePage";
 
 const AppRoutes = () => {
   return (
@@ -56,11 +58,23 @@ const AppRoutes = () => {
         }
       />
 
+      <Route path="/analysis" element={<AnalysisPage />} />
+
       <Route
         path="/job-match"
         element={
           <PrivateRoute>
             <JobMatchPage />
+          </PrivateRoute>
+        }
+      />
+
+      
+      <Route
+        path="/improve"
+        element={
+          <PrivateRoute>
+            <ImproveResumePage />
           </PrivateRoute>
         }
       />

@@ -14,7 +14,24 @@ public class GeminiService {
         return chatModel.chat(prompt);
     }
 
-    public String generate(String prompt) {
+    public String generate(String prompt){
+
+    try {
+
         return chatModel.chat(prompt);
+
+    } catch(Exception e){
+
+        if(e.getMessage().contains("429")){
+
+            return "AI service quota exceeded. Please try again later.";
+
+        }
+
+        throw e;
+
     }
+
+}
+ 
 }

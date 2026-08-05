@@ -19,6 +19,12 @@ public class ChatController {
 
     @PostMapping
     public ChatResponse chat(Authentication authentication, @RequestBody ChatRequest request) {
+        if (request.getResumeId() == null || request.getResumeId().isBlank()) {
+            throw new IllegalArgumentException("resumeId is required");
+        }
+        if (request.getQuestion() == null || request.getQuestion().isBlank()) {
+            throw new IllegalArgumentException("question is required");
+        }
         return chatService.ask(request.getResumeId(), request.getQuestion(), authentication.getName());
     }
 }

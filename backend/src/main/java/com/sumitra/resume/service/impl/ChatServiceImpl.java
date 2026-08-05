@@ -55,14 +55,20 @@ public class ChatServiceImpl implements ChatService {
     }
 
     private String buildPrompt(String context, String question) {
-        return "You are an AI Resume Assistant.\n\n"
-                + "Answer ONLY using the resume context below.\n\n"
-                + "If the answer is not available, reply:\n"
-                + "\"The resume does not mention this.\"\n\n"
-                + "Resume Context:\n"
-                + context + "\n\n"
-                + "Question:\n"
-                + question + "\n\n"
-                + "Answer:";
+        return """
+                You are an AI Resume Assistant.
+
+                Answer the user's question using ONLY the resume context below.
+                Do not invent companies, projects, skills, dates, or experience.
+                If the answer cannot be found in the resume context, say so clearly.
+
+                Resume Context:
+                %s
+
+                Question:
+                %s
+
+                Answer only using the resume.
+                """.formatted(context, question);
     }
 }
